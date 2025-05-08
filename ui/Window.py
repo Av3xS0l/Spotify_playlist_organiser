@@ -29,7 +29,7 @@ class Widget:
         self.height = height
     
     def frame(self, buff: list[str]) -> str:
-        buff[self.y] = buff[self.y][:self.x]+SET_FG_COL(COLOR)+'╭' + '─'*(self.width-2) + '╮' + SET_CLEAR+buff[self.y][self.x+self.width:]
+        buff[self.y] = buff[self.y][:self.x]+SET_FG_COL(COLOR)+'╭' + '─'*(self.width-2) + '╮' + SET_CLEAR + buff[self.y][self.x+self.width:]
         for i in range(self.y+1, self.y+self.height-1):
             buff[i] = buff[i][:self.x]+SET_FG_COL(COLOR)+'│' + buff[i][self.x:self.x+self.width-2] +'│' + SET_CLEAR+buff[i][self.x+self.width:]
         buff[self.y+self.height-1] = buff[self.y+self.height-1][:self.x]+SET_FG_COL(COLOR)+'╰' + '─'*(self.width-2) + '╯' + SET_CLEAR+buff[self.y+self.height-1][self.x+self.width:]
