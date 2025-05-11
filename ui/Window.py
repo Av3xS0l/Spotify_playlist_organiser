@@ -89,7 +89,7 @@ class Window:
         self.cursor = dt.Point(0, 0)
         self.buffer: list[str] = [" "*self.width]*self.height
         self.offBuffer: list[str] = []
-        self.objMap = {}
+        self.objMap: dict[str, Widget] = {}
        
         # widget initialization goes here
         self.objMap['main'] = Widget('main', 0, 0, self.width, self.height-5)
