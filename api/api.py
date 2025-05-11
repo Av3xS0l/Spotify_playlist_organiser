@@ -4,6 +4,7 @@ from spotipy.oauth2 import SpotifyOAuth
 
 SPOTIPY_CLIENT_ID = env.get_key('.env', 'SPOTIPY_CLIENT_ID')
 SPOTIPY_CLIENT_SECRET = env.get_key('.env', 'SPOTIPY_CLIENT_SECRET')
+SPOTIPY_REDIRECT_URI = env.get_key('.env', 'SPOTIPY_REDIRECT_URI')
 
 scope = "user-library-read"
 
