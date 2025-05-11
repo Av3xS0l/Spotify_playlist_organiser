@@ -8,16 +8,6 @@ import os
 import datatypes as dt
 import time
 
-# All of the hardcoded strings for ease of use
-
-# Ansii color code
-COLOR : int= 255
-
-SET_CLEAR = "\033[0m"
-def SET_FG_COL(x): return f"\033[38;5{x}m"
-def SET_BG_COL(x): return f"\033[48;5{x}m"
-
-
 
 class Widget:
     '''
@@ -32,18 +22,12 @@ class Widget:
         self.height = height
     
     def frame(self, buff: list[str]) -> str:
-        buff[self.y] = buff[self.y][:self.x] + \
-            SET_FG_COL(COLOR) + '╭' + '─'*(self.width-2) + '╮' + SET_CLEAR + \
-            buff[self.y][self.x+self.width+len(SET_CLEAR)+len(SET_FG_COL(COLOR)):]
+        buff[self.y] = buff[self.y][:self.x] + '╭' + '─'*(self.width-2) + '╮' + buff[self.y][self.x+self.width:]
     
         for i in range(self.y+1, self.y+self.height-1):
-            buff[i] = buff[i][:self.x]+SET_FG_COL(COLOR) + \
-                '│' + buff[i][self.x:self.x+self.width-2] +'│' + SET_CLEAR + \
-                buff[i][self.x+self.width+len(SET_CLEAR)+len(SET_FG_COL(COLOR)):]
+            buff[i] = buff[i][:self.x]+ '│' + buff[i][self.x:self.x+self.width-2] +'│' + buff[i][self.x+self.width:]
         
-        buff[self.y+self.height-1] = buff[self.y+self.height-1][:self.x] + \
-            SET_FG_COL(COLOR)+'╰' + '─'*(self.width-2) + '╯' + SET_CLEAR + \
-            buff[self.y+self.height-1][self.x+self.width+len(SET_CLEAR)+len(SET_FG_COL(COLOR)):]
+        buff[self.y+self.height-1] = buff[self.y+self.height-1][:self.x] + '╰' + '─'*(self.width-2) + '╯' + buff[self.y+self.height-1][self.x+self.width:]
 
 class Commands(Widget):
     def __init__(self, name: str, x: int, y: int, width: int, height: int) -> None:
@@ -54,23 +38,17 @@ class Commands(Widget):
         self.commands.add(command)
 
     def frame(self, buff: list[str]) -> str:
-        buff[self.y] = buff[self.y][:self.x] + \
-            SET_FG_COL(COLOR) + '╭' + '─'*(self.width-2) + '╮' + SET_CLEAR + \
-            buff[self.y][self.x+self.width+len(SET_CLEAR)+len(SET_FG_COL(COLOR)):]
+        buff[self.y] = buff[self.y][:self.x] + '╭' + '─'*(self.width-2) + '╮' + buff[self.y][self.x+self.width:]
         
         coms = self.commands.get()
     
         for i in range(self.y+1, self.y+self.height-1):
             text = coms[i-(self.y+1)] if coms[i-(self.y+1)] != None else '' 
             buff[i] = buff[i][:self.x] + ' '*(self.width-2) + buff[i][self.x+self.width:]
-            middle = text+buff[i][self.x+len(text):self.x+self.width-2]
-            buff[i] = buff[i][:self.x]+SET_FG_COL(COLOR) + \
-                '│' + middle +'│' + SET_CLEAR + \
-                buff[i][self.x+self.width+len(SET_CLEAR)+len(SET_FG_COL(COLOR)):]
+            middle = text+buff[i][self.x + len(text):self.x + self.width-2]
+            buff[i] = buff[i][:self.x] + '│' + middle + '│' + buff[i][self.x+self.width:]
         
-        buff[self.y+self.height-1] = buff[self.y+self.height-1][:self.x] + \
-            SET_FG_COL(COLOR)+'╰' + '─'*(self.width-2) + '╯' + SET_CLEAR + \
-            buff[self.y+self.height-1][self.x+self.width+len(SET_CLEAR)+len(SET_FG_COL(COLOR)):]
+        buff[self.y+self.height-1] = buff[self.y+self.height-1][:self.x] +'╰' + '─'*(self.width-2) + '╯' + buff[self.y+self.height-1][self.x+self.width:]
 
 
 class Window:
