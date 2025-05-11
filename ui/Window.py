@@ -34,49 +34,43 @@ class Widget:
     def frame(self, buff: list[str]) -> str:
         buff[self.y] = buff[self.y][:self.x] + \
             SET_FG_COL(COLOR) + '╭' + '─'*(self.width-2) + '╮' + SET_CLEAR + \
-            buff[self.y][self.x+self.width:]
+            buff[self.y][self.x+self.width+len(SET_CLEAR)+len(SET_FG_COL(COLOR)):]
     
         for i in range(self.y+1, self.y+self.height-1):
             buff[i] = buff[i][:self.x]+SET_FG_COL(COLOR) + \
                 '│' + buff[i][self.x:self.x+self.width-2] +'│' + SET_CLEAR + \
-                buff[i][self.x+self.width:]
+                buff[i][self.x+self.width+len(SET_CLEAR)+len(SET_FG_COL(COLOR)):]
         
         buff[self.y+self.height-1] = buff[self.y+self.height-1][:self.x] + \
             SET_FG_COL(COLOR)+'╰' + '─'*(self.width-2) + '╯' + SET_CLEAR + \
-            buff[self.y+self.height-1][self.x+self.width:]
+            buff[self.y+self.height-1][self.x+self.width+len(SET_CLEAR)+len(SET_FG_COL(COLOR)):]
 
 class Commands(Widget):
-    def __init__(self, name: str, x: int, y: int, width: int, height: int, maxSize: int = 5) -> None:
+    def __init__(self, name: str, x: int, y: int, width: int, height: int) -> None:
         super().__init__(name, x, y, width, height)
-        self.commands = dt.Queue()
-        self.maxSize = maxSize
+        self.commands = dt.CommandQueue(height-2)
     
     def addCommand(self, command: str) -> None:
-        self.commands.enqueue(command)
-        if self.commands.size > self.maxSize:
-            self.commands.dequeue()
+        self.commands.add(command)
 
     def frame(self, buff: list[str]) -> str:
         buff[self.y] = buff[self.y][:self.x] + \
             SET_FG_COL(COLOR) + '╭' + '─'*(self.width-2) + '╮' + SET_CLEAR + \
-            buff[self.y][self.x+self.width:]
+            buff[self.y][self.x+self.width+len(SET_CLEAR)+len(SET_FG_COL(COLOR)):]
         
-        # print the commands
-        coms = []
-        for x in self.commands.peek():
-           coms.append(x) 
+        coms = self.commands.get()
     
         for i in range(self.y+1, self.y+self.height-1):
-            text = coms[(i-self.y-1)] if (i-self.y-1) < len(coms) else ' '
+            text = coms[i-(self.y+1)] if coms[i-(self.y+1)] != None else '' 
             buff[i] = buff[i][:self.x] + ' '*(self.width-2) + buff[i][self.x+self.width:]
             middle = text+buff[i][self.x+len(text):self.x+self.width-2]
             buff[i] = buff[i][:self.x]+SET_FG_COL(COLOR) + \
                 '│' + middle +'│' + SET_CLEAR + \
-                buff[i][self.x+self.width:]
+                buff[i][self.x+self.width+len(SET_CLEAR)+len(SET_FG_COL(COLOR)):]
         
         buff[self.y+self.height-1] = buff[self.y+self.height-1][:self.x] + \
             SET_FG_COL(COLOR)+'╰' + '─'*(self.width-2) + '╯' + SET_CLEAR + \
-            buff[self.y+self.height-1][self.x+self.width:]
+            buff[self.y+self.height-1][self.x+self.width+len(SET_CLEAR)+len(SET_FG_COL(COLOR)):]
 
 
 class Window:
@@ -89,14 +83,14 @@ class Window:
         self.cursor = dt.Point(0, 0)
         self.buffer: list[str] = [" "*self.width]*self.height
         self.offBuffer: list[str] = []
-        self.objMap: dict[str, Widget] = {}
+        self.objMap: dict[str, Widget | Commands] = {}
        
         # widget initialization goes here
         self.objMap['main'] = Widget('main', 0, 0, self.width, self.height-5)
         self.objMap['main'].frame(self.buffer)
 
         # widget for outputing recent calls
-        self.objMap['output'] = Commands('output', 0, self.height-5, self.width, 3)
+        self.objMap['output'] = Commands('output', 0, self.height-5, self.width, 5)
 
         self.objMap['output'].addCommand('test')
         self.objMap['output'].addCommand('test2')
@@ -114,10 +108,11 @@ class Window:
 # testing
 
 win = Window()
-os.system('clear')
+os.system('cls')
 win.draw()
 for i in range(5):
     time.sleep(1)
     win.objMap['output'].addCommand('test_'+str(i))
     win.objMap['output'].frame(win.buffer)
+    os.system('cls')
     win.draw()
