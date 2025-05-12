@@ -59,12 +59,13 @@ class Window:
     
     def __init__(self) -> None:
         self.width, self.height = os.get_terminal_size()
-        self.buffer: list[str] = [" "*self.width]*self.height
-        self.offBuffer: list[str] = [" "*self.width]*self.height
+        self.buffer: list[str] = [" "*self.width]*(self.height+1)
+        self.offBuffer: list[str] = [" "*self.width]*(self.height+1)
         self.objMap: dict[str, Widget | Commands] = {}
 
     
     def draw(self):
+        print('\033[H')
         for idx, line in enumerate(self.offBuffer):
             if line != self.buffer[idx]:
                 # finds the common prefix of a string

@@ -14,7 +14,7 @@ def main() -> None:
 
 
     # Init of the widgets on the screen 
-    win.add('main', 'Widget', 0, 0, win.width, win.height-R_CMD_H)
+    win.add('main', 'Widget', 0, 1, win.width, win.height-R_CMD_H-1)
     win.add('recent commands', 'Commands',0, win.height-R_CMD_H, win.width, R_CMD_H)
 
 
@@ -35,7 +35,7 @@ def main() -> None:
     time.sleep(1)
     win.objMap['recent commands'].addCommand('4', win.offBuffer)
     eventLoop()
-
+    print()
 
 if __name__ == "__main__":
     main()
