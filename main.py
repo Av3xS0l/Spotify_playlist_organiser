@@ -22,20 +22,6 @@ def main() -> None:
     def eventLoop()-> None:
         win.draw()
 
-    eventLoop()
-    time.sleep(1)
-    win.objMap['recent commands'].addCommand('1', win.offBuffer)
-    eventLoop()
-    time.sleep(1)
-    win.objMap['recent commands'].addCommand('2', win.offBuffer)
-    eventLoop()
-    time.sleep(1)
-    win.objMap['recent commands'].addCommand('3', win.offBuffer)
-    eventLoop()
-    time.sleep(1)
-    win.objMap['recent commands'].addCommand('4', win.offBuffer)
-    eventLoop()
-    print()
 
 if __name__ == "__main__":
     main()
