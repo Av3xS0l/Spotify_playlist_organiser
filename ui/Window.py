@@ -5,8 +5,7 @@ Shows the previous commands and lets user access the
 '''
 
 import os
-import datatypes as dt
-import time
+from .datatypes import CommandQueue
 
 
 class Widget:
@@ -32,10 +31,12 @@ class Widget:
 class Commands(Widget):
     def __init__(self, name: str, x: int, y: int, width: int, height: int) -> None:
         super().__init__(name, x, y, width, height)
-        self.commands = dt.CommandQueue(height-2)
+        self.commands = CommandQueue(height-2)
     
-    def addCommand(self, command: str) -> None:
+    def addCommand(self, command: str, buff: list[str]) -> None:
         self.commands.add(command)
+        self.frame(buff)
+
 
     def frame(self, buff: list[str]) -> str:
         buff[self.y] = buff[self.y][:self.x] + '╭' + '─'*(self.width-2) + '╮' + buff[self.y][self.x+self.width:]
@@ -58,24 +59,9 @@ class Window:
     
     def __init__(self) -> None:
         self.width, self.height = os.get_terminal_size()
-        self.cursor = dt.Point(0, 0)
         self.buffer: list[str] = [" "*self.width]*self.height
         self.offBuffer: list[str] = [" "*self.width]*self.height
         self.objMap: dict[str, Widget | Commands] = {}
-       
-        # widget initialization goes here
-        self.objMap['main'] = Widget('main', 0, 0, self.width, self.height-5)
-        self.objMap['main'].frame(self.offBuffer)
-
-        # widget for outputing recent calls
-        self.objMap['output'] = Commands('output', 0, self.height-5, self.width, 5)
-
-        self.objMap['output'].addCommand('test')
-        self.objMap['output'].addCommand('test2')
-        self.objMap['output'].addCommand('test3')
-        
-        self.objMap['output'].frame(self.offBuffer)
-
 
     
     def draw(self):
@@ -85,4 +71,13 @@ class Window:
                 pref: int = len(os.path.commonprefix([self.buffer[idx], self.offBuffer[idx]]))
                 print(f'\033[{idx};{pref+1}H'+self.offBuffer[idx][pref:])
                 self.buffer[idx] = self.buffer[idx][:pref] + self.offBuffer[idx][pref:]
-                
+    
+    def add(self, name: str, dtype: str, x: int, y: int, w: int, h: int) -> None:
+        match dtype:
+            case 'Widget':
+                self.objMap[name] = Widget(name, x, y, w, h)
+            case 'Commands':
+                self.objMap[name] = Commands(name, x, y, w, h)
+            case _:
+                raise Exception("Unknown widget type")
+        self.objMap[name].frame(self.offBuffer)
