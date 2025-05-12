@@ -60,12 +60,12 @@ class Window:
         self.width, self.height = os.get_terminal_size()
         self.cursor = dt.Point(0, 0)
         self.buffer: list[str] = [" "*self.width]*self.height
-        self.offBuffer: list[str] = []
+        self.offBuffer: list[str] = [" "*self.width]*self.height
         self.objMap: dict[str, Widget | Commands] = {}
        
         # widget initialization goes here
         self.objMap['main'] = Widget('main', 0, 0, self.width, self.height-5)
-        self.objMap['main'].frame(self.buffer)
+        self.objMap['main'].frame(self.offBuffer)
 
         # widget for outputing recent calls
         self.objMap['output'] = Commands('output', 0, self.height-5, self.width, 5)
@@ -74,23 +74,15 @@ class Window:
         self.objMap['output'].addCommand('test2')
         self.objMap['output'].addCommand('test3')
         
-        self.objMap['output'].frame(self.buffer)
+        self.objMap['output'].frame(self.offBuffer)
 
 
     
     def draw(self):
-        for x in self.buffer:
-            print(x)
-
-    
-# testing
-
-win = Window()
-os.system('cls')
-win.draw()
-for i in range(5):
-    time.sleep(1)
-    win.objMap['output'].addCommand('test_'+str(i))
-    win.objMap['output'].frame(win.buffer)
-    os.system('cls')
-    win.draw()
+        for idx, line in enumerate(self.offBuffer):
+            if line != self.buffer[idx]:
+                # finds the common prefix of a string
+                pref: int = len(os.path.commonprefix([self.buffer[idx], self.offBuffer[idx]]))
+                print(f'\033[{idx};{pref+1}H'+self.offBuffer[idx][pref:])
+                self.buffer[idx] = self.buffer[idx][:pref] + self.offBuffer[idx][pref:]
+                
