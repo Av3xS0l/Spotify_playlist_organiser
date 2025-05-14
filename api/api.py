@@ -7,14 +7,14 @@ from spotipy.oauth2 import SpotifyOAuth
 # 2.2. Iegūt playlisti, kas pašreiz skan  - done
 # vai dziema noklausita vismaz lidz pusei - done
 # 2.3. Iegūst, vai šobrīd skan shuffle  - get if song is from the playlist - limit 100 songs due to api - done
-# 2.4. Iegūst pēdējās N dziesmas - 
+# 2.4. Iegūst pēdējās N dziesmas - done
 # 2.5. determines if skiped
 class api: 
     def __init__(self):
         env.load_dotenv('.env')
 
         # iclude all scopes needed for api authentification
-        scopes = ['user-library-read', 'user-read-playback-state', 'playlist-modify-public', 'playlist-modify-private']
+        scopes = ['user-library-read', 'user-read-playback-state', 'playlist-modify-public', 'playlist-modify-private', 'user-read-recently-played']
         scope = ' '.join(scopes)
 
         self.sp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
@@ -28,11 +28,9 @@ class api:
         playlist_info = self.sp.playlist(playlist_id) 
         print(f"Currently playing playlist: {playlist_info['name']}")
         print(f"Playlist ID: {playlist_id}")
-        return{
-            playlist_info,
-            playlist_id,
-            playlist_uri,
-        }
+
+        #return tuple, bc uses less space and is faster, we have predetermined nr of elements to return
+        return(playlist_info, playlist_id, playlist_uri) 
 
     def current_song(self):
         result = self.sp.current_user_playing_track()
@@ -42,11 +40,9 @@ class api:
         song_artist = song['artists'][0]['name']
         song_id = song['id']
         print(f"Currently playing: {song_artist} - {song_name} - {song_id}")
-        return{
-            song_name,
-            song_artist,
-            song_id
-        }
+
+        return(song_name, song_artist, song_id)
+
 
     def half_not_listened(self): #return true or false
         result = self.sp.current_playback()
@@ -71,9 +67,9 @@ class api:
         print(f"Progress: {progress_mmss} / {duration_mmss} ({percent:.1f}%)")
 
         if percent < 50:
-            return(True)
+            return True
         else:
-            return(False)
+            return False
         
     def is_song_in_playlist(self):
         playback = self.sp.current_playback()
@@ -100,8 +96,21 @@ class api:
             print("No playlist context is currently active.")
             return False
         
-    def last_n(self):
+    def last_n_songs(self):
         n = 5
+        results = self.sp.current_user_recently_played(limit=n)
+        songs = results['items']
+        
+        for idx, item in enumerate(songs, start=1):
+            song = item['track']
+            song_name = song['name']
+            song_artist = song['artists'][0]['name']
+            print(f"{idx}. {song_artist} - {song_name}")
+        
+        return songs
+    
+   # def skipped (self):
+
 
 
 
@@ -119,7 +128,8 @@ class api:
 
 if __name__ == "__main__":
     spotify_api = api()
-    spotify_api.current_playlist
+    #spotify_api.current_playlist
     spotify_api.current_song()
     spotify_api.half_not_listened()
     spotify_api.is_song_in_playlist()
+    spotify_api.last_n_songs()
