@@ -1,2 +1,4 @@
 dotenv
 spotipy
+pillow
+requests
