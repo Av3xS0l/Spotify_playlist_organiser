@@ -19,6 +19,7 @@ class api:
 
         self.sp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
 
+# pašreiz skan:
     def current_playlist(self):
         playback = self.sp.current_playback()
         context = playback.get('context')
@@ -109,27 +110,11 @@ class api:
         
         return songs
     
-   # def skipped (self):
-
-
-
-
-
-
-#def add_song(self):
-
-
-
-# def is_shuffle():
-
-# def last_n():
-
-# def half_not_listened():
 
 if __name__ == "__main__":
     spotify_api = api()
-    #spotify_api.current_playlist
+    spotify_api.current_playlist
     spotify_api.current_song()
-    spotify_api.half_not_listened()
+    #spotify_api.half_not_listened()
     spotify_api.is_song_in_playlist()
-    spotify_api.last_n_songs()
+    #spotify_api.last_n_songs()
