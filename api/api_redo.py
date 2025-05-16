@@ -28,7 +28,8 @@ class SongData:
         self.song_duration_ms: int | None = None  # int how long is the song
         self.song_image: str = ''
 
-        self.last_5_songs
+
+        self.last_5_songs: (T5) # type: ignore # track returns name, id, artist, album{ name, image }
     
     def is_track(self):
         if self.currently_playing_type == 'track':
@@ -51,13 +52,8 @@ class SongData:
         except ZeroDivisionError:
             return False
         
-    def last_played_songs(self):
-        for idx, item in enumerate(self.last_5_songs, start=1):
-            song = item['track']
-            song_name = song['name']
-            song_artist = song['artists'][0]['name']
-        
-        return self.last_5_songs
+
+
     
 
 
@@ -83,21 +79,16 @@ class Api:
 
         #last played songs
         n = 5
-        results = self.sp.current_user_recently_played(limit=n)
-        songs = results['items']
-        
-        for idx, item in enumerate(songs, start=1):
-            song = item['track']
-            song_name = song['name']
-            song_artist = song['artists'][0]['name']
-            print(f"{idx}. {song_artist} - {song_name}")
+        recent = self.sp.current_user_recently_played(limit=n)
+        self.recent_songs = recent['items']
 
+        #general info based on playlist
         playback = self.sp.current_playback()
         if not playback:
             return None #nekas paslaik netiek atskanots
         
         song.currently_playing_type = playback['currently_playing_type'] # check if playing a track / music
-        song.is_playing = playback['is_playing'] # check if not paused
+        #song.is_playing = playback['is_playing'] # check if not paused
         song.shuffle_state = playback['shuffle_state'] # check if shuffle is enabled
         song.song_progress_ms = playback['progress_ms'] # how far has the song been listened
 
