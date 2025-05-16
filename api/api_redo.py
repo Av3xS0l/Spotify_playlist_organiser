@@ -5,12 +5,16 @@ from spotipy.oauth2 import SpotifyOAuth
  # get las 5 songs
  # get playlist songs
 
+ # padod song data objektu ieksa api clase
+ # add song
+ # remove song
+
 class SongData:
     def __init__(self):
 
         self.currently_playing_type: str = '' # track, episode, or ad
         self.shuffle_state: bool = False #true or false
-        self.song_progress_ms: int | None = 0 # int how much have you listened
+        self.song_progress_ms: int | None = None # int how much have you listened
         self.playlist_uri: str = ''
         self.playlist_id: str = ''
         self.playlist_name: str = ''
@@ -21,8 +25,10 @@ class SongData:
         self.song_id: str = ''
         self.song_uri: str = ''
         self.song_artists: str = ''
-        self.song_duration_ms: int | None = 0  # int how long is the song
+        self.song_duration_ms: int | None = None  # int how long is the song
         self.song_image: str = ''
+
+        self.last_5_songs
     
     def is_track(self):
         if self.currently_playing_type == 'track':
@@ -44,10 +50,18 @@ class SongData:
             return proportion > 0.5
         except ZeroDivisionError:
             return False
+        
+    def last_played_songs(self):
+        for idx, item in enumerate(self.last_5_songs, start=1):
+            song = item['track']
+            song_name = song['name']
+            song_artist = song['artists'][0]['name']
+        
+        return self.last_5_songs
     
 
 
-class api: 
+class Api: 
     def __init__(self):
         env.load_dotenv('.env')
 
@@ -62,9 +76,21 @@ class api:
 
         
     def api_call(self) -> SongData:
-        user = self.sp.current_user()
         song = SongData()
+
+        user = self.sp.current_user()
         self.user_id = user['id']
+
+        #last played songs
+        n = 5
+        results = self.sp.current_user_recently_played(limit=n)
+        songs = results['items']
+        
+        for idx, item in enumerate(songs, start=1):
+            song = item['track']
+            song_name = song['name']
+            song_artist = song['artists'][0]['name']
+            print(f"{idx}. {song_artist} - {song_name}")
 
         playback = self.sp.current_playback()
         if not playback:
@@ -122,11 +148,8 @@ class api:
 
         
 if __name__ == "__main__":
-    a = api()
-    a.api_call()
-    print(a.is_users_playlist())
-    print(a.is_track())
-    print(a.playlist_info())
-    print(a.song_info())
-    print(a.listened_half())
+    a = Api()
+    a.SongData()
+    print(a.self.last_5_songs)
+    
 
