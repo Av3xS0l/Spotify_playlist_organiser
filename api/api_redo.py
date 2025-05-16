@@ -2,25 +2,27 @@ import dotenv as env
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 
+ # get las 5 songs
+ # get playlist songs
 
 class SongData:
     def __init__(self):
 
-        self.currently_playing_type = '' #string: track, episode, or ad
+        self.currently_playing_type: str = '' # track, episode, or ad
         self.shuffle_state: bool = False #true or false
-        self.song_progress_ms = 0 # int how much have you listened
-        self.playlist_uri = '' # string
-        self.playlist_id = '' # string
-        self.playlist_name = '' # string
+        self.song_progress_ms: int | None = 0 # int how much have you listened
+        self.playlist_uri: str = ''
+        self.playlist_id: str = ''
+        self.playlist_name: str = ''
         self.playlist_owner_id: str = ''
         self.playlist_collaborative = False # true or false
-        self.playlist_image = '' # string url
-        self.song_name = '' # string
-        self.song_id = '' # string
-        self.song_uri = '' # string
-        self.song_artists = '' # string
+        self.playlist_image: str = '' # url
+        self.song_name: str = ''
+        self.song_id: str = ''
+        self.song_uri: str = ''
+        self.song_artists: str = ''
         self.song_duration_ms: int | None = 0  # int how long is the song
-        self.song_image = '' #string url
+        self.song_image: str = ''
     
     def is_track(self):
         if self.currently_playing_type == 'track':
@@ -55,7 +57,7 @@ class api:
 
         self.sp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
 
-        self.user_id = '' # string
+        self.user_id: str = ''
         self.is_playing = False #true (if not paused) or false
 
         
