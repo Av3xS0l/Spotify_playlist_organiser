@@ -20,7 +20,6 @@ class SongData:
         self.playlist_name: str = ''
         self.playlist_owner_id: str = ''
         self.playlist_collaborative = False # true or false
-        self.playlist_image: str = '' # url
         self.song_name: str = ''
         self.song_id: str = ''
         self.song_uri: str = ''
@@ -104,7 +103,6 @@ class Api:
                 song.playlist_name = playlist['name']
                 song.playlist_owner_id = playlist['owner']['id']
                 song.playlist_collaborative = playlist['collaborative']
-                song.playlist_image = playlist['images'][2]['url']
 
             except spotipy.exceptions.SpotifyException:
                 pass  # Playlist may not be accessible
@@ -138,9 +136,9 @@ class Api:
 
 
         
-if __name__ == "__main__":
-    a = Api()
-    a.SongData()
-    print(a.self.last_5_songs)
+# if __name__ == "__main__":
+#     a = Api()
+#     a.SongData()
+#     print(a.self.last_5_songs)
     
 

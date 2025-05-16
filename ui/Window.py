@@ -27,7 +27,7 @@ class Widget:
         buff[self.y] = buff[self.y][:self.x] + '╭' + '─'*(self.width-2) + '╮' + buff[self.y][self.x+self.width:]
     
         for i in range(self.y+1, self.y+self.height-1):
-            buff[i] = buff[i][:self.x]+ '│' + buff[i][self.x:self.x+self.width-2] +'│' + buff[i][self.x+self.width:]
+            buff[i] = buff[i][:self.x] + '│' + ' '*(self.width-2) + '│' + buff[i][self.x+self.width:]
         
         buff[self.y+self.height-1] = buff[self.y+self.height-1][:self.x] + '╰' + '─'*(self.width-2) + '╯' + buff[self.y+self.height-1][self.x+self.width:]
 
@@ -60,10 +60,10 @@ class Cover(Widget):
     !!IMPORTANT!!
     Width = 32+2 (34), Height = 16+2 (18)
     '''
-    def __init__(self, name: str, x: int, y: int, width: int = 34, height: int = 18) -> None:
+    def __init__(self, name: str, x: int, y: int, max_w: int, width: int = 34, height: int = 18) -> None:
         super().__init__(name, x, y, width, height)
         self.pixels = [" "*32]*16
-
+        self.parent_w = max_w
     def convert(self, link: str | None):
         '''
         link: spotify 64x64 iamge url
@@ -86,8 +86,9 @@ class Cover(Widget):
            
     
         for i in range(self.y+1, self.y+self.height-1):
-            middle = self.pixels[i-(self.y+1)]
-            buff[i] = buff[i][:self.x] + '│' + middle + '│' + buff[i][self.x+self.width:]
+            middle =  self.pixels[i-(self.y+1)]
+
+            buff[i] = buff[i][:self.x]+ '│'+ middle + '│' + buff[i][self.x+self.width:self.parent_w]
         
         buff[self.y+self.height-1] = buff[self.y+self.height-1][:self.x] +'╰' + '─'*(self.width-2) + '╯' + buff[self.y+self.height-1][self.x+self.width:]
 
@@ -107,13 +108,14 @@ class Window:
 
     
     def draw(self):
-        print('\033[H')
+        print('\033[0m\033[H')
+        for item in self.objMap:
+            self.objMap[item].frame(self.offBuffer)
         for idx, line in enumerate(self.offBuffer):
             if line != self.buffer[idx]:
-                # finds the common prefix of a string
-                pref: int = len(os.path.commonprefix([self.buffer[idx], self.offBuffer[idx]]))
-                print(f'\033[{idx};{pref+1}H'+self.offBuffer[idx][pref:])
-                self.buffer[idx] = self.buffer[idx][:pref] + self.offBuffer[idx][pref:]
+                # redraws the changed line
+                self.buffer[idx] = self.offBuffer[idx]
+                print(f"\033[{idx};0H{self.buffer[idx]}")
     
     def add(self, name: str, dtype: str, x: int, y: int, w: int, h: int, link: str | None = None) -> None:
         match dtype:
@@ -122,7 +124,7 @@ class Window:
             case 'Commands':
                 self.objMap[name] = Commands(name, x, y, w, h)
             case 'Cover': 
-                self.objMap[name] = Cover(name, x, y)
+                self.objMap[name] = Cover(name, x, y, self.width)
                 self.objMap[name].convert(link) # initial link. can later be updated by calling the same function
             case _:
                 raise Exception("Unknown widget type")
