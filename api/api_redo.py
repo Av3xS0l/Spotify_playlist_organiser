@@ -12,23 +12,23 @@ class api:
 
         self.sp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
 
-        self.user_id = None # string
-        self.currently_playing_type = None #string: track, episode, or ad
+        self.user_id = '' # string
+        self.currently_playing_type = '' #string: track, episode, or ad
         self.is_playing = False #true (if not paused) or false
         self.shuffle_state = False #true or false
         self.song_progress_ms = 0 # int how much have you listened
-        self.playlist_uri = None # string
-        self.playlist_id = None # string
-        self.playlist_name = None # string
-        self.playlist_owner_id = None # string
+        self.playlist_uri = '' # string
+        self.playlist_id = '' # string
+        self.playlist_name = '' # string
+        self.playlist_owner_id = '' # string
         self.playlist_collaborative = False # true or false
-        self.playlist_images = None # string url
-        self.song_name = None # string
-        self.song_id = None # string
-        self.song_uri = None # string
-        self.song_artists = None # string
+        self.playlist_images = '' # string url
+        self.song_name = '' # string
+        self.song_id = '' # string
+        self.song_uri = '' # string
+        self.song_artists = '' # string
         self.song_duration_ms = 0 # int how long is the song
-        self.song_images = None #string url
+        self.song_images = '' #string url
 
     def api_call(self):
         user = self.sp.current_user()
@@ -85,10 +85,28 @@ class api:
 
 
     def playlist_info(self):
-        return ()
+        # 0 = uri, 1 = id, 2 = name, 3 = collaborative, 4 = image url
+        return (self.playlist_uri, self.playlist_id, self.playlist_name, self.playlist_collaborative, self.playlist_images)
 
-    # def is_shufle_enabled(self):
+    # def is_shufle_enabled(self): - - alreday have true or false attribute - self.shuffle_state
 
-    # def song_info(self):
+    def song_info(self):
+        # 0 = uri, 1 = id, 2 = name, 3 = artist name, 4 = image url
+        return (self.song_uri, self.song_id, self.song_name, self.song_artists, self.song_images)
 
-    # def listened_time(self):
+    def listened_half(self):
+        try:
+            proportion = self.song_progress_ms / self.song_duration_ms
+            return proportion > 0.5
+        except ZeroDivisionError:
+            return False
+        
+if __name__ == "__main__":
+    a = api()
+    a.api_call()
+    print(a.is_users_playlist())
+    print(a.is_track())
+    print(a.playlist_info())
+    print(a.song_info())
+    print(a.listened_half())
+
