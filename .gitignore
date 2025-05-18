@@ -176,3 +176,6 @@ cython_debug/
 *.jpeg
 *.jpg
 *.png
+
+# Local song data
+*.pkl

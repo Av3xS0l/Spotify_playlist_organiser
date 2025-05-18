@@ -8,9 +8,12 @@ from time import sleep
 def main() -> None:
     
     win = Window()
-    R_CMD_H = 5
-    SLEEP_SEC = 3
-    HEIGHT_MIN = 20
+    R_CMD_H: int = 5
+    SLEEP_SEC: int = 3
+    HEIGHT_MIN: int = 20
+
+    SKIP_CNT_TRESHOLD: int = 3
+
         
     # Prepearing the screen
     os.system('cls' if os.name == 'nt' else 'clear')    # clear the screen
@@ -43,17 +46,12 @@ def main() -> None:
         win.draw()
 
     prev_song = SongData()
+
+    SkippedSongs: dict[str, int] = {}
+
+
     # Main loop
     while True:
-        '''
-        1. Get current song
-        2. checks
-        2.1 is same song
-        2.2 is user playlist
-        2.3 is a track
-        2.4 shuffle state
-        3. if 
-        '''
         # get current song
         current_song = api.api_call()
         if current_song == None:
@@ -62,8 +60,6 @@ def main() -> None:
             sleep(SLEEP_SEC)
             continue
         
-        
-
         # song checks
         if current_song.song_id != prev_song.song_id and \
             api.is_users_playlist(current_song) and \
@@ -72,12 +68,25 @@ def main() -> None:
             
             # song is different
             
-            # is the song in playlist
+            # is the song in playlist?
+
+
+            # has the song been skipped early?
+            if prev_song.song_id != '' and not prev_song.listened_half():
+                win.objMap['commands'].addCommand(f"Song {prev_song.song_name} was skipped early", win.offBuffer, 'yellow')
+                if prev_song.song_id in SkippedSongs.keys():
+                    SkippedSongs[prev_song.song_id] += 1
+                    if SkippedSongs[prev_song.song_id] >= SKIP_CNT_TRESHOLD:
+                        # TODO: remove song from playlist
+                        ...
+                        SkippedSongs.pop(prev_song.song_id)
+                        win.objMap['commands'].addCommand(f"Removed {prev_song.song_name} from playlist", win.offBuffer, 'red')
+                else:
+                    SkippedSongs.update({prev_song.song_id: 1})
             
 
             
-            prev_song = current_song
-        win.objMap['commands'].addCommand(str(current_song.playlist_info()), win.offBuffer,)
+        prev_song = current_song
         drawLoop(image=current_song.song_image)    
         sleep(SLEEP_SEC)
 

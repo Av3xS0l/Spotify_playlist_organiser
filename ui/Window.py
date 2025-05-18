@@ -9,6 +9,7 @@ from .datatypes import CommandQueue
 from PIL import Image
 import requests as req
 import io
+from datetime import datetime
 
 
 class Widget:
@@ -37,6 +38,8 @@ class Commands(Widget):
         self.commands = CommandQueue(height-2)
     
     def addCommand(self, command: str, buff: list[str], color: str | None = None) -> None:
+        time = datetime.now().strftime("%H:%M:%S")
+        command = f"{time}  |  {command}"
         if color:
             match color:
                 case 'red':
