@@ -36,7 +36,24 @@ class Commands(Widget):
         super().__init__(name, x, y, width, height)
         self.commands = CommandQueue(height-2)
     
-    def addCommand(self, command: str, buff: list[str]) -> None:
+    def addCommand(self, command: str, buff: list[str], color: str | None = None) -> None:
+        if color:
+            match color:
+                case 'red':
+                    command = f"\033[31m{command}\033[0m"
+                case 'green':
+                    command = f"\033[32m{command}\033[0m"
+                case 'yellow':
+                    command = f"\033[33m{command}\033[0m"
+                case 'blue':
+                    command = f"\033[34m{command}\033[0m"
+                case 'magenta':
+                    command = f"\033[35m{command}\033[0m"
+                case 'cyan':
+                    command = f"\033[36m{command}\033[0m"
+                case _:
+                    pass
+
         self.commands.add(command)
         self.frame(buff)
 
@@ -48,9 +65,15 @@ class Commands(Widget):
     
         for i in range(self.y+1, self.y+self.height-1):
             text = coms[i-(self.y+1)] if coms[i-(self.y+1)] != None else '' 
-            buff[i] = buff[i][:self.x] + ' '*(self.width-2) + buff[i][self.x+self.width:]
-            middle = text+buff[i][self.x + len(text):self.x + self.width-2]
-            buff[i] = buff[i][:self.x] + '│' + middle + '│' + buff[i][self.x+self.width:]
+            if text == '':
+                short_t = 0
+            elif text[0] == "\033":
+                short_t = 9 # the len of excape sequence
+            else:
+                short_t = 0
+
+            middle = '│' + text + ' '*(self.width - len(text) - 2 + short_t) + '│'
+            buff[i] = buff[i][:self.x] + middle + buff[i][self.x+self.width:self.width]
         
         buff[self.y+self.height-1] = buff[self.y+self.height-1][:self.x] +'╰' + '─'*(self.width-2) + '╯' + buff[self.y+self.height-1][self.x+self.width:]
 

@@ -9,7 +9,7 @@ def main() -> None:
     
     win = Window()
     R_CMD_H = 5
-    SLEEP_SEC = 1
+    SLEEP_SEC = 3
     HEIGHT_MIN = 20
         
     # Prepearing the screen
@@ -31,7 +31,7 @@ def main() -> None:
 
     # Init of the widgets on the screen 
     win.add('main', 'Widget', 0, 1, win.width, win.height-R_CMD_H-1)
-    win.add('recent commands', 'Commands', 0, win.height-R_CMD_H, win.width, R_CMD_H)
+    win.add('commands', 'Commands', 0, win.height-R_CMD_H, win.width, R_CMD_H)
     win.add('cover', 'Cover', win.width-35, 2, 0, 0) # Replace with proper api call
 
     # API Init
@@ -42,9 +42,9 @@ def main() -> None:
         win.objMap['cover'].convert(image)
         win.draw()
 
-
+    prev_song = SongData()
     # Main loop
-    for i in range(5):
+    while True:
         '''
         1. Get current song
         2. checks
@@ -54,8 +54,31 @@ def main() -> None:
         2.4 shuffle state
         3. if 
         '''
+        # get current song
         current_song = api.api_call()
-        drawLoop(image=current_song.song_image)
+        if current_song == None:
+            win.objMap['commands'].addCommand("No song is currently playing", win.offBuffer, 'red')
+            drawLoop(image=None)    
+            sleep(SLEEP_SEC)
+            continue
+        
+        
+
+        # song checks
+        if current_song.song_id != prev_song.song_id and \
+            api.is_users_playlist(current_song) and \
+            current_song.is_track() and \
+            current_song.shuffle_state:
+            
+            # song is different
+            
+            # is the song in playlist
+            
+
+            
+            prev_song = current_song
+        win.objMap['commands'].addCommand(str(current_song.playlist_info()), win.offBuffer,)
+        drawLoop(image=current_song.song_image)    
         sleep(SLEEP_SEC)
 
 

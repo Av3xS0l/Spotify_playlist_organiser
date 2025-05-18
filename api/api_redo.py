@@ -38,7 +38,7 @@ class SongData:
     
     def playlist_info(self):
         # 0 = uri, 1 = id, 2 = name, 3 = collaborative, 4 = image url
-        return (self.playlist_uri, self.playlist_id, self.playlist_name, self.playlist_collaborative, self.playlist_image)
+        return (self.playlist_uri, self.playlist_id, self.playlist_name, self.playlist_collaborative)
 
     def song_info(self):
         # 0 = uri, 1 = id, 2 = name, 3 = artist name, 4 = image url
