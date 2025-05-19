@@ -139,7 +139,7 @@ class Api:
         return True # song is not in the playlist
             
     def add_song(self, song: SongData):
-        return self.sp.playlist_add_items(song.playlist_id, song.song_id)
+        return self.sp.playlist_add_items(song.playlist_id, [song.song_uri])
     
     def remove_song(self, song: SongData):
-        return self.sp.playlist_remove_all_occurrences_of_items(song.playlist_id, song.song_id)
+        return self.sp.playlist_remove_all_occurrences_of_items(song.playlist_id, [song.song_uri])
