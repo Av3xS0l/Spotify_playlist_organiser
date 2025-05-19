@@ -19,7 +19,7 @@ class SongData:
         self.playlist_id: str = ''
         self.playlist_name: str = ''
         self.playlist_owner_id: str = ''
-        self.playlist_collaborative = False # true or false
+        # self.playlist_collaborative = False # true or false 
         self.song_name: str = ''
         self.song_id: str = ''
         self.song_uri: str = ''
@@ -68,6 +68,8 @@ class Api:
 
         self.user_id: str = ''
         self.is_playing = False #true (if not paused) or false
+        self.playlist_id = None
+        self.playlist_set: set[str] = {}
 
         
     def api_call(self) -> SongData:
@@ -97,12 +99,14 @@ class Api:
         if context and context['type'] == "playlist":
             song.playlist_uri = context['uri']
             song.playlist_id = song.playlist_uri.split(":")[-1]
+            if self.playlist_id == None:
+                self.playlist_id = song.playlist_id
 
             try:
                 playlist = self.sp.playlist(song.playlist_id)
                 song.playlist_name = playlist['name']
                 song.playlist_owner_id = playlist['owner']['id']
-                song.playlist_collaborative = playlist['collaborative']
+                self.playlist_set = playlist['tracks']['items']['id']
 
             except spotipy.exceptions.SpotifyException:
                 pass  # Playlist may not be accessible
@@ -123,6 +127,18 @@ class Api:
             return True
         else:
             return False
+        
+    def song_not_in_playlist(self, song: SongData):
+        if song.song_id in self.playlist_set:
+            return False # song is in the playlist
+        return True # song is not in the playlist
+            
+    def add_song(self, song: SongData):
+        return self.sp.playlist_add_items(song.playlist_id, song.song_id)
+    
+    def remove_song(self, song: SongData):
+        return self.sp.playlist_remove_all_occurrences_of_items(song.playlist_id, song.song_id)
+
 
 
     # def not_paused(self): - alreday have true or false attribute - self.is_playing
