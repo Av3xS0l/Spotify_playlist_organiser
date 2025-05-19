@@ -28,7 +28,7 @@ class SongData:
         self.song_image: str = ''
 
 
-        self.last_5_songs: (T5) # type: ignore # track returns name, id, artist, album{ name, image }
+        #self.last_5_songs: (T5) # type: ignore # track returns name, id, artist, album{ name, image }
     
     def is_track(self):
         if self.currently_playing_type == 'track':
@@ -79,9 +79,9 @@ class Api:
         self.user_id = user['id']
 
         #last played songs
-        n = 5
-        recent = self.sp.current_user_recently_played(limit=n)
-        self.recent_songs = recent['items']
+        # n = 5
+        # recent = self.sp.current_user_recently_played(limit=n)
+        # self.recent_songs = recent['items']
 
         #general info based on playlist
         playback = self.sp.current_playback()

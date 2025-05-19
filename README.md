@@ -9,12 +9,20 @@ Klausoties mūziku bieži rodas situācijas, kad klausīšanās saraksti piepild
 # DEV - tiks noņemts
 ## Steps for developement  
 1. Lietotājam jāievada savs Spotify api key+secret ja ieiet pirmo reizi   
-2. Wrapper funkcijas:   
-2.1. Iegūst dziesmu, kas pašreiz skan.  
-2.2. Iegūt playlisti, kas pašreiz skan  
-2.3. Iegūst, vai šobrīd skan shuffle  
-2.4. Iegūst pēdējās N dziesmas  
-2.5. determines if skiped  
+
+2. API iegūtie dati:  
+2.1 Lietotāja id
+2.2 Atskaņojuma tips (dziesma, epizode, reklāma)  
+2.3 Vai ir ieslēgts ShufflePlay (ir, nav)  
+2.4 Milisekundes, cik ilgi dziesma jau ir atskaņota  
+2.5 Dati par pašreiz atskaņoto playlisti (vārds, id, uri, īpašnieka id)  
+2.6 Pašreiz atskaņotās playlistes dziesmu saraksts  
+2.7 Dati par pašreiz atskaņoto dziesmu (vārds, id, uri, izpildītājs, ilgums, bilde)  
+
+3. Wrapper funkcijas:   
+2.1. is_users_playlist - 
+progress - nosaka vai dziesma ir noklausīta vairāk kā 'treshold' 
+2.2.   
 
 # Uzstādīšana
 > ⚠️Programmas lietošanai ir nepieciešams *Spotify* konts⚠️
@@ -38,7 +46,13 @@ Klausoties mūziku bieži rodas situācijas, kad klausīšanās saraksti piepild
 `pip install -r requirements.txt`
 
 # Lietošana  
-...
+Kods palaists terminālī:
+1. Dziesma ir playlistē un tiek noklausīta vairāk kā 40% tās garuma - kods neko nedara, dziesma paliek playlistē;  
+2. Dziesma ir playlistē bet netiek noklausīta vairāk kā 40% tās garuma - dziesmas id tiek saglabāts sarakstā;  
+2.1. Kad dziesmas id ir saglabāts sarakstā 3 reizes - dziesma tiek izņemta no playlistes;  
+3. Dziesma nav playlistē (ShufflePlay) un tiek noklausīta vismaz 80% tās garuma - dziesma tiek pievienota playlistei;
+
+Terminālī ir redzamas pēdējās 3 veiktās darbības un attiecīgās dziesmas nosaukums.
 
 # Dokumentācija
 ...
