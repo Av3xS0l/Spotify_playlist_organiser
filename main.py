@@ -9,10 +9,12 @@ def main() -> None:
     
     win = Window()
     R_CMD_H: int = 5
-    SLEEP_SEC: int = 3
+    SLEEP_SEC: int = 5
     HEIGHT_MIN: int = 20
 
     SKIP_CNT_TRESHOLD: int = 3
+    SKIP_TRESHOLD = 0.4
+    ADD_TRESHOLD = 0.8
 
         
     # Prepearing the screen
@@ -69,16 +71,18 @@ def main() -> None:
             # song is different
             
             # is the song in playlist?
-
+            if api.song_not_in_playlist(current_song):
+                if current_song.progress(ADD_TRESHOLD):
+                    api.add_song(current_song)
+                    win.objMap['commands'].addCommand(f"{current_song.song_name} was added to the playlist", win.offBuffer, 'green')
 
             # has the song been skipped early?
-            if prev_song.song_id != '' and not prev_song.listened_half():
-                win.objMap['commands'].addCommand(f"Song {prev_song.song_name} was skipped early", win.offBuffer, 'yellow')
+            if prev_song.song_id != '' and not prev_song.progress(SKIP_TRESHOLD):
+                win.objMap['commands'].addCommand(f"{prev_song.song_name} was skipped early", win.offBuffer, 'yellow')
                 if prev_song.song_id in SkippedSongs.keys():
                     SkippedSongs[prev_song.song_id] += 1
                     if SkippedSongs[prev_song.song_id] >= SKIP_CNT_TRESHOLD:
-                        # TODO: remove song from playlist
-                        ...
+                        api.remove_song(prev_song)
                         SkippedSongs.pop(prev_song.song_id)
                         win.objMap['commands'].addCommand(f"Removed {prev_song.song_name} from playlist", win.offBuffer, 'red')
                 else:

@@ -44,10 +44,10 @@ class SongData:
         # 0 = uri, 1 = id, 2 = name, 3 = artist name, 4 = image url
         return (self.song_uri, self.song_id, self.song_name, self.song_artists, self.song_image)
 
-    def listened_half(self):
+    def progress(self, treshold: float):
         try:
             proportion = self.song_progress_ms / self.song_duration_ms
-            return proportion > 0.5
+            return proportion > treshold
         except ZeroDivisionError:
             return False
         
@@ -69,7 +69,7 @@ class Api:
         self.user_id: str = ''
         self.is_playing = False #true (if not paused) or false
         self.playlist_id = None
-        self.playlist_set: set[str] = {}
+        self.playlist_set: set[str] = set()
 
         
     def api_call(self) -> SongData:
@@ -99,14 +99,19 @@ class Api:
         if context and context['type'] == "playlist":
             song.playlist_uri = context['uri']
             song.playlist_id = song.playlist_uri.split(":")[-1]
-            if self.playlist_id == None:
-                self.playlist_id = song.playlist_id
+            
+            
 
             try:
                 playlist = self.sp.playlist(song.playlist_id)
+                if self.playlist_id == None:
+                    self.playlist_id = song.playlist_id
+                    for track in playlist['tracks']['items']:
+                        self.playlist_set.add(track['track']['id'])
                 song.playlist_name = playlist['name']
                 song.playlist_owner_id = playlist['owner']['id']
-                self.playlist_set = playlist['tracks']['items']['id']
+                
+
 
             except spotipy.exceptions.SpotifyException:
                 pass  # Playlist may not be accessible
@@ -138,23 +143,3 @@ class Api:
     
     def remove_song(self, song: SongData):
         return self.sp.playlist_remove_all_occurrences_of_items(song.playlist_id, song.song_id)
-
-
-
-    # def not_paused(self): - alreday have true or false attribute - self.is_playing
-
-
-
-
-    # def is_shufle_enabled(self): - - alreday have true or false attribute - self.shuffle_state
-
-
-
-
-        
-# if __name__ == "__main__":
-#     a = Api()
-#     a.SongData()
-#     print(a.self.last_5_songs)
-    
-
