@@ -71,10 +71,10 @@ def main() -> None:
             # song is different
             
             # is the song in playlist?
-            if api.song_not_in_playlist(current_song):
-                if current_song.progress(ADD_TRESHOLD):
-                    api.add_song(current_song)
-                    win.objMap['commands'].addCommand(f"{current_song.song_name} was added to the playlist", win.offBuffer, 'green')
+            if api.song_not_in_playlist(prev_song):
+                if prev_song.progress(ADD_TRESHOLD):
+                    api.add_song(prev_song)
+                    win.objMap['commands'].addCommand(f"{prev_song.song_name} was added to the playlist", win.offBuffer, 'green')
 
             # has the song been skipped early?
             if prev_song.song_id != '' and not prev_song.progress(SKIP_TRESHOLD):
