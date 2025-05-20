@@ -57,4 +57,34 @@ Kods palaists terminālī:
 Terminālī ir redzamas pēdējās 3 veiktās darbības un attiecīgās dziesmas nosaukums.
 
 # Dokumentācija
-...
+## Izmantotās ārējās bibliotēkas
+bibliotēka | pielietojums  
+:---:|:----  
+`os` |  Ļauj veikt darbības ar operētājsistēmas funkcijām termināli, kā arī iegūt termināļa un vides paramentrus  
+`time` |  Ļauj piekļūt sistēmas pulkstenim un apturēt programmas izpildi uz noteiktu laiku  
+`pickle` |  Ļauj efektīvi saglabāt failos `python` objektus. Tas ļauj ātri un efektīvi saglabāt programmas stāvokli, lai to būtu iespējams atjaunot pēc programmas darbības apturēšanas  
+`spotipy`|  Ļauj veikt komunikāciju ar *Spotify web API*, kas ir nepieciešams, lai iegūtu datus no *Spotify*. Šī bibliotēka arī nodrošina autentifikāciju ar *Spotify* aplikāciju  
+`dotenv`|  Ļauj no faila ielādēt vidē mainīgos, tādā veidā tos droši uzglabājot un nodrošinot privātu piekļuves atsleģu autentifikāciju  
+`pillow`(`PIL` |  Ir plaši lietota bibliotēka attēlu apstrādei. Tā tiek izmantota lai pārveidotu iegūto dziesmas albūma attēlu tā, lai to būtu iespējams attēlot termināļa vidē  
+`requests` | Ļauj veikt tīmekļa pieprasījumus
+`io` | nodrošina datu plūsmu apstrādi, ļaujot neveidot pagaidu failus
+`datetime` | veido interfeisu pašreizējā laika attēlošanai  
+
+## Lietotās datu struktūras
+### `CommandQueue`
+ Datu struktūra, kas paredzēta konstanta garuma pēdējo n ierakstu uzglabāšanai. Seko principam FiFo. Šī struktūra darbā ļaujuzglabāt pēdējās n izvadītās komandas, un tā kā tai nav nepieciešams būt ar dinamiski maināmu izmēru tad tika pielietotā šāda - specializēta rindas implementācija.
+darbība | laika sarežģītība
+:---:|:---:
+Elementa pievienošana | **O(1)**
+Elementa iegūšana | **O(1)**
+Visu elementu izvadīšana | **O(n)**
+
+### `dict` jeb *vārdnīca*
+Vārdnīca ir valodā `python` iebūvēta datu struktūra, kas ļauj uzglabāt datu pārus un ļoti efektīvi piekļūt datiem. Tā tiek projektā izmantota, lai uzglabātu dziesmu pārtīšanas reižu skaitu un ļauj ātri pievienot un noņemt no tās elementus.
+darbība | laika sarežģītība  
+:--:|:--:
+Elementa pievienošana | **O(1)**
+Elementa dzēšana | **O(1)**
+Elementa eksistences pārbaude | **O(1)**
+Piekļuve pie konkrēta elementa | **O(1)**
+Visu elementu izvade | **O(n)**
