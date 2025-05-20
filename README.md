@@ -3,28 +3,8 @@
 Klausoties savu iemīļoto mūzikas playlisti pēdējais par ko gribās domāt ir playlistes atjaunošana. Bieži gadās, ka kāda dziesma vairs neiederas starp pārējām un konstanti tiek izlaista, vai tieši pretēji, Spotify piedāvā kādu dziesmu, kura fantastiski ietilpst starp pārējām. Tad izveidojas playlistes, kuras īti neatbilst tavām vēlmēm. Tāpēc mēs izstrādājam risinājumu, kurš ļauj noņemt no klausīšanās sarakstiem dziesmas, kas bieži tiek izlaistas, kā arī pievienotas dziesmas, kuras šajā sarakstā neatrodas, taču tiek bieži klausītas, padarot dziemu klausīšanos par vēl patīkamāku pieredzi.  
 
 ## Veidotāji
-- Patrīcija Krēsliņa
-- Patriks Gustavs Rinkevičs
-
-# DEV - tiks noņemts
-## Steps for developement  
-1. Lietotājam jāievada savs Spotify api key+secret ja ieiet pirmo reizi   
-
-2. API iegūtie dati:  
-2.1 Lietotāja id
-2.2 Atskaņojuma tips (dziesma, epizode, reklāma)  
-2.3 Vai ir ieslēgts ShufflePlay (ir, nav)  
-2.4 Milisekundes, cik ilgi dziesma jau ir atskaņota  
-2.5 Dati par pašreiz atskaņoto playlisti (vārds, id, uri, īpašnieka id)  
-2.6 Pašreiz atskaņotās playlistes dziesmu saraksts  
-2.7 Dati par pašreiz atskaņoto dziesmu (vārds, id, uri, izpildītājs, ilgums, bilde)  
-
-3. Wrapper funkcijas:   
-2.1. is_users_playlist - pārliecinās, ka playliste, kas tiek atskaņota pieder tev un ir iespējams izmainīt dziesmu sarakstu  
-2.2 progress - nosaka vai dziesma ir noklausīta vairāk kā 'treshold' 
-2.2. song_not_in_playlist - atgriež True, ja izvēlētā dziesma pašreiz nav playlistes sarakstā  
-2.3 add_song  
-2.4 remove_song  
+- **Patrīcija Krēsliņa**
+- **Patriks Gustavs Rinkevičs**
 
 # Uzstādīšana
 > ⚠️Programmas lietošanai ir nepieciešams *Spotify* konts⚠️
@@ -58,7 +38,7 @@ Terminālī ir redzamas pēdējās 3 veiktās darbības un attiecīgās dziesmas
 
 # Dokumentācija
 ## Izmantotās ārējās bibliotēkas
-bibliotēka | pielietojums  
+Bibliotēka | Pielietojums  
 :---:|:----  
 `os` |  Ļauj veikt darbības ar operētājsistēmas funkcijām termināli, kā arī iegūt termināļa un vides paramentrus  
 `time` |  Ļauj piekļūt sistēmas pulkstenim un apturēt programmas izpildi uz noteiktu laiku  
@@ -73,7 +53,7 @@ bibliotēka | pielietojums
 ## Lietotās datu struktūras
 ### `CommandQueue`
  Datu struktūra, kas paredzēta konstanta garuma pēdējo n ierakstu uzglabāšanai. Seko principam FiFo. Šī struktūra darbā ļaujuzglabāt pēdējās n izvadītās komandas, un tā kā tai nav nepieciešams būt ar dinamiski maināmu izmēru tad tika pielietotā šāda - specializēta rindas implementācija.
-darbība | laika sarežģītība
+Darbība | Laika sarežģītība
 :---:|:---:
 Elementa pievienošana | **O(1)**
 Elementa iegūšana | **O(1)**
@@ -81,10 +61,30 @@ Visu elementu izvadīšana | **O(n)**
 
 ### `dict` jeb *vārdnīca*
 Vārdnīca ir valodā `python` iebūvēta datu struktūra, kas ļauj uzglabāt datu pārus un ļoti efektīvi piekļūt datiem. Tā tiek projektā izmantota, lai uzglabātu dziesmu pārtīšanas reižu skaitu un ļauj ātri pievienot un noņemt no tās elementus.
-darbība | laika sarežģītība  
+Darbība | Laika sarežģītība  
 :--:|:--:
 Elementa pievienošana | **O(1)**
 Elementa dzēšana | **O(1)**
 Elementa eksistences pārbaude | **O(1)**
 Piekļuve pie konkrēta elementa | **O(1)**
 Visu elementu izvade | **O(n)**
+
+## Darbības apraksts  
+
+### API iegūtie dati  
+1. Lietotāja `id`  
+2. Atskaņojuma tips (`dziesma`, `epizode`, `reklāma`)  
+3. Vai ir ieslēgts *ShufflePlay* (*ir*, *nav*)  
+4. Dziesmas atskaņošanas ilgums (*ms*)
+5. Dati par pašreizējo atskaņošanas sarakstu (`vārds`, `id`, `uri`, `īpašnieka id`)  
+6. Pašreizējā atskaņošanas saraksta dziesmas  
+7. Dati par pašreiz atskaņoto dziesmu (`vārds`, `id`, `uri`, `izpildītājs`, `ilgums`, `attēls`)  
+
+### Funkcijas, kas veic API izsaukumus
+Funkcija | Apraksts 
+:---:|--- 
+`is_users_playlist()` | Pārliecinās, ka atskaņošanas saraksts, pieder lietotājam un ir iespējams izmainīt dziesmu sarakstu  
+`progress(treshold)` | Nosaka vai ir noklausīta lielāka daļa no dziesmas nekā `treshold` 
+`song_not_in_playlist(song)` |  Pārbauda, vai dziesma jau neatrodas atskaņošanas sarakstā 
+`add_song(song,playlist)` | Pievieno dziesmu norādītajam atskaņošanas sarakstam
+`remove_song(song,playlist)` | Noņem dziesmu no norādītā atskaņošanas saraksta
