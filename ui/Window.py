@@ -118,8 +118,43 @@ class Cover(Widget):
         
         buff[self.y+self.height-1] = buff[self.y+self.height-1][:self.x] +'╰' + '─'*(self.width-2) + '╯' + buff[self.y+self.height-1][self.x+self.width:]
 
+class Info(Widget):
+    def __init__(self, name, x, y, width, height):
+        super().__init__(name, x, y, width, height)
+        self.playing: str = "Currently playing"
+        self.playlist: str = ''
+        self.song: str = ''
+        self.artist: str = ''
+    
+    def setPlaylist(self, text: str) -> None:
+        self.playlist = f"Playlist: {text}"
+        if len(text) > self.width-2:
+            self.playlist = self.playlist[:self.width-5] + '...'
+    
+    def setSong(self, text: str) -> None:
+        self.song = f"Song:     {text}"
+        if len(text) > self.width-2:
+            self.song = self.song[:self.width-5] + '...'
+    
+    def setArtist(self, text: str) -> None:
+        self.artist = f"Artist:   {text}"
+        if len(text) > self.width-2:
+            self.artist = self.artist[:self.width-5] + '...'
+    
+    def frame(self, buff: list[str]) -> None:
+        buff[self.y] = buff[self.y][:self.x] + '╭' + '─'*(self.width-2) + '╮' + buff[self.y][self.x+self.width:]
+        
+        buff[self.y+1] = buff[self.y+1][:self.x] + '│' + self.playing + ' '*(self.width-2-len(self.playing)) + '│' + buff[self.y+1][self.x+self.width:]
+        buff[self.y+2] = buff[self.y+1][:self.x] + '├' + '─'*(self.width-2) + '┤' + buff[self.y+1][self.x+self.width:]
+        buff[self.y+3] = buff[self.y+2][:self.x] + '│' + self.playlist + ' '*(self.width-2-len(self.playlist)) + '│' + buff[self.y+2][self.x+self.width:]
+        buff[self.y+4] = buff[self.y+3][:self.x] + '│' + self.song + ' '*(self.width-2-len(self.song)) + '│' + buff[self.y+3][self.x+self.width:]
+        buff[self.y+5] = buff[self.y+4][:self.x] + '│' + self.artist + ' '*(self.width-2-len(self.artist)) + '│' + buff[self.y+4][self.x+self.width:]
 
-
+        # fill the rest of the lines with spaces
+        for i in range(self.y+6, self.y+self.height-1):
+            buff[i] = buff[i][:self.x] + '│' + ' '*(self.width-2) + '│' + buff[i][self.x+self.width:]
+        
+        buff[self.y+self.height-1] = buff[self.y+self.height-1][:self.x] +'╰' + '─'*(self.width-2) + '╯' + buff[self.y+self.height-1][self.x+self.width:]
 
 class Window:
     '''
@@ -152,6 +187,8 @@ class Window:
             case 'Cover': 
                 self.objMap[name] = Cover(name, x, y, self.width)
                 self.objMap[name].convert(link) # initial link. can later be updated by calling the same function
+            case 'Info':
+                self.objMap[name] = Info(name, x, y, w, h)
             case _:
                 raise Exception("Unknown widget type")
         self.objMap[name].frame(self.offBuffer)

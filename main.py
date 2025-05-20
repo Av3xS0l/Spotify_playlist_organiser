@@ -34,13 +34,18 @@ def main() -> None:
     win.add('main', 'Widget', 0, 1, win.width, win.height-R_CMD_H-1)
     win.add('commands', 'Commands', 0, win.height-R_CMD_H, win.width, R_CMD_H)
     win.add('cover', 'Cover', win.width-35, 2, 0, 0) # Replace with proper api call
+    win.add('info', 'Info', 1, 2, 32, 7)
 
     # API Init
     api = Api()
 
     # Draw the objects on the screen
-    def drawLoop(image: str):
+    def drawLoop(image: str, data: tuple[str, str, str] | None = None) -> None:
         win.objMap['cover'].convert(image)
+        if data != None:
+            win.objMap['info'].setPlaylist(data[0])
+            win.objMap['info'].setSong(data[1])
+            win.objMap['info'].setArtist(data[2])
         win.draw()
 
 
@@ -101,7 +106,7 @@ def main() -> None:
                     
         # update the song and screen
         prev_song = current_song
-        drawLoop(image=current_song.song_image)    
+        drawLoop(image=current_song.song_image, data=(current_song.playlist_name, current_song.song_name, current_song.song_artists))    
         sleep(SLEEP_SEC)
 
 
