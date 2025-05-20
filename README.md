@@ -1,6 +1,6 @@
 # Spotify_playlist_organiser  
 ## Uzdevums  
-Klausoties mūziku bieži rodas situācijas, kad klausīšanās saraksti piepildās ar dziesmām, kuras lietotājs vairs nevēlas klausīties. Tas rada lielu sajukumu šajos sarakstos un padara sarežģītu dziesmu atrašanu. Tāpēc mēs izstrādājam risinājumu, kurš ļauj noņemt no klausīšanās sarakstiem dziesmas, kas bieži tiek pārtītas, kā arī pievienotas dziesmas, kuras šajā sarakstā neatrodas, taču tiek bieži klausītas.  
+Klausoties savu iemīļoto mūzikas playlisti pēdējais par ko gribās domāt ir playlistes atjaunošana. Bieži gadās, ka kāda dziesma vairs neiederas starp pārējām un konstanti tiek izlaista, vai tieši pretēji, Spotify piedāvā kādu dziesmu, kura fantastiski ietilpst starp pārējām. Tad izveidojas playlistes, kuras īti neatbilst tavām vēlmēm. Tāpēc mēs izstrādājam risinājumu, kurš ļauj noņemt no klausīšanās sarakstiem dziesmas, kas bieži tiek izlaistas, kā arī pievienotas dziesmas, kuras šajā sarakstā neatrodas, taču tiek bieži klausītas, padarot dziemu klausīšanos par vēl patīkamāku pieredzi.  
 
 ## Veidotāji
 - Patrīcija Krēsliņa
@@ -20,9 +20,11 @@ Klausoties mūziku bieži rodas situācijas, kad klausīšanās saraksti piepild
 2.7 Dati par pašreiz atskaņoto dziesmu (vārds, id, uri, izpildītājs, ilgums, bilde)  
 
 3. Wrapper funkcijas:   
-2.1. is_users_playlist - 
-progress - nosaka vai dziesma ir noklausīta vairāk kā 'treshold' 
-2.2.   
+2.1. is_users_playlist - pārliecinās, ka playliste, kas tiek atskaņota pieder tev un ir iespējams izmainīt dziesmu sarakstu  
+2.2 progress - nosaka vai dziesma ir noklausīta vairāk kā 'treshold' 
+2.2. song_not_in_playlist - atgriež True, ja izvēlētā dziesma pašreiz nav playlistes sarakstā  
+2.3 add_song  
+2.4 remove_song  
 
 # Uzstādīšana
 > ⚠️Programmas lietošanai ir nepieciešams *Spotify* konts⚠️
