@@ -13,9 +13,9 @@ def main() -> None:
     SLEEP_SEC: int = 5
     HEIGHT_MIN: int = 25
 
-    SKIP_CNT_TRESHOLD: int = 3
-    SKIP_TRESHOLD = 0.4
-    ADD_TRESHOLD = 0.8
+    SKIP_CNT_TRESHOLD: int = 2
+    SKIP_TRESHOLD: float = 0.4
+    ADD_TRESHOLD: float = 0.8
 
         
     # Prepearing the screen
