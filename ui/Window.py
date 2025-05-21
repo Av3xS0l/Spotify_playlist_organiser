@@ -143,18 +143,27 @@ class Info(Widget):
     
     def frame(self, buff: list[str]) -> None:
         buff[self.y] = buff[self.y][:self.x] + '╭' + '─'*(self.width-2) + '╮' + buff[self.y][self.x+self.width:]
+    
+        nowPlaying = '│' + self.playing + ' '*(self.width-2-len(self.playing)) + '│'
+        buff[self.y+1] = buff[self.y+1][:self.x] + nowPlaying + buff[self.y+1][self.x+self.width:]
         
-        buff[self.y+1] = buff[self.y+1][:self.x] + '│' + self.playing + ' '*(self.width-2-len(self.playing)) + '│' + buff[self.y+1][self.x+self.width:]
-        buff[self.y+2] = buff[self.y+1][:self.x] + '├' + '─'*(self.width-2) + '┤' + buff[self.y+1][self.x+self.width:]
-        buff[self.y+3] = buff[self.y+2][:self.x] + '│' + self.playlist + ' '*(self.width-2-len(self.playlist)) + '│' + buff[self.y+2][self.x+self.width:]
-        buff[self.y+4] = buff[self.y+3][:self.x] + '│' + self.song + ' '*(self.width-2-len(self.song)) + '│' + buff[self.y+3][self.x+self.width:]
-        buff[self.y+5] = buff[self.y+4][:self.x] + '│' + self.artist + ' '*(self.width-2-len(self.artist)) + '│' + buff[self.y+4][self.x+self.width:]
-
-        # fill the rest of the lines with spaces
+        midLine = '├' + '─'*(self.width-2) + '┤'
+        buff[self.y+2] = buff[self.y+2][:self.x] + midLine + buff[self.y+2][self.x+self.width:]
+        
+        playlistLine = '│' + self.playlist + ' '*(self.width-2-len(self.playlist)) + '│'
+        buff[self.y+3] = buff[self.y+3][:self.x] + playlistLine + buff[self.y+3][self.x+self.width:]
+        
+        SongLine = '│' + self.song + ' '*(self.width-2-len(self.song)) + '│'
+        buff[self.y+4] = buff[self.y+4][:self.x] + SongLine + buff[self.y+4][self.x+self.width:]
+        
+        artistLine = '│' + self.artist + ' '*(self.width-2-len(self.artist)) + '│'
+        buff[self.y+5] = buff[self.y+5][:self.x] + artistLine + buff[self.y+5][self.x+self.width:]
+        
         for i in range(self.y+6, self.y+self.height-1):
-            buff[i] = buff[i][:self.x] + '│' + ' '*(self.width-2) + '│' + buff[i][self.x+self.width:]
+            mid = '│' + ' '*(self.width-2) + '│'
+            buff[i] = buff[i][:self.x] + mid + buff[i][self.x+self.width:]
         
-        buff[self.y+self.height-1] = buff[self.y+self.height-1][:self.x] +'╰' + '─'*(self.width-2) + '╯' + buff[self.y+self.height-1][self.x+self.width:]
+        buff[self.y+self.height-1] = buff[self.y+self.height-1][:self.x] + '╰' + '─'*(self.width-2) + '╯' + buff[self.y+self.height-1][self.x+self.width:]
 
 class Window:
     '''
