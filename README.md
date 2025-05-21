@@ -7,7 +7,7 @@ Klausoties savu iemīļoto mūzikas playlisti pēdējais par ko gribās domāt i
 - **Patriks Gustavs Rinkevičs**
 
 # Uzstādīšana
-> ⚠️Programmas lietošanai ir nepieciešams *Spotify* konts⚠️
+> !!!Programmas lietošanai ir nepieciešams *Spotify* konts!!!
 ## *Spotify* Web Api konta izveide
 1. Dodieties uz saiti [https://developer.spotify.com/]() un spiediet uz **Log in** augšējā labajā stūrī.  
 2. Pierakstieties izmantojot savu *Spotify* kontu
